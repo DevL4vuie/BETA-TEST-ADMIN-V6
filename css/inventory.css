@@ -1,0 +1,304 @@
+:root {
+    --primary: #ff4e00;      
+    --primary-hover: #e04500;
+    --navy: #1a2b4c;          
+    --text-grey: #8d97ad;
+    --bg-body: #f1f4f9;      
+    --bg-card: #ffffff;
+    --radius: 10px;          
+    --shadow: 0 4px 15px rgba(0,0,0,0.03);
+    --border-color: rgba(0,0,0,0.08);
+    --transition: all 0.2s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--navy);
+    min-height: 100vh;
+    font-size: 13px;
+}
+
+/* --- HEADER --- */
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 0 1rem; }
+.header-title h1 { font-size: 22px; font-weight: 700; color: var(--navy); }
+.header-title p { color: var(--text-grey); font-size: 13px; margin-top: 3px; }
+
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: var(--transition);
+}
+.btn-primary:hover { transform: translateY(-2px); background: var(--primary-hover); }
+
+.btn-light {
+    background: white; border: 1px solid #e1e4e8; color: var(--navy);
+    padding: 10px 15px; border-radius: 8px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: var(--transition);
+}
+.btn-light:hover { background: #f8f9fa; border-color: #d1d5db; }
+
+/* --- STATS --- */
+.stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px; margin-bottom: 25px;
+}
+.stat-card {
+    background: var(--bg-card); padding: 20px; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 15px; cursor: pointer;
+    transition: var(--transition);
+}
+.stat-card:hover { transform: translateY(-3px); }
+
+.stat-icon {
+    width: 45px; height: 45px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.stat-icon.orange { background: #fff0e6; color: var(--primary); }
+.stat-icon.red { background: #ffebee; color: #e74a3b; }
+.stat-icon.green { background: #e8f5e9; color: #2e7d32; }
+.stat-icon.blue { background: #e3f2fd; color: #2196f3; }
+
+.stat-info h3 { font-size: 11px; color: var(--text-grey); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+.stat-info p { font-size: 20px; font-weight: 700; color: var(--navy); }
+
+/* --- TABLE --- */
+.table-container {
+    background: var(--bg-card); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden;
+}
+.table-header-row { 
+    padding: 15px; display: flex; justify-content: space-between; 
+    gap: 10px; border-bottom: 1px solid #eee; 
+}
+.search-box { flex: 1; }
+.search-box input {
+    width: 100%; padding: 10px 15px; border: 1px solid #e1e4e8; 
+    border-radius: 8px; font-size: 13px; outline: none;
+}
+.filter-select {
+    padding: 10px 15px; border: 1px solid #e1e4e8; 
+    border-radius: 8px; font-size: 13px; outline: none; cursor: pointer;
+}
+
+.table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table { width: 100%; border-collapse: collapse; }
+th { 
+    text-align: left; padding: 12px 20px; color: var(--text-grey); 
+    font-size: 11px; font-weight: 700; text-transform: uppercase; 
+    border-bottom: 1px solid #eee; background: #f8f9fa; 
+}
+td { 
+    padding: 12px 20px; border-bottom: 1px solid #f1f4f9; 
+    vertical-align: middle; color: #333; 
+}
+
+/* BADGES */
+.badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; }
+.badge-out { background: #ffebee; color: #c62828; }
+.badge-low { background: #fff3e0; color: #ef6c00; }
+.badge-good { background: #e8f5e9; color: #2e7d32; }
+.badge-exp { background: #ffebee; color: #b71c1c; border: 1px solid #ffcdd2; margin-left: 5px; }
+
+/* ACTION BUTTONS */
+.action-cell { display: flex; align-items: center; justify-content: flex-start; gap: 8px; white-space: nowrap; }
+.btn-icon {
+    width: 32px; height: 32px; border-radius: 6px; border: none; background: transparent;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+    transition: 0.2s; font-size: 14px;
+}
+.btn-icon.edit { background: #e3f2fd; color: #1976d2; }
+.btn-icon.archive { background: #fff3e0; color: #f57c00; }
+.btn-icon.delete { background: #ffebee; color: #d32f2f; }
+.btn-icon:hover { opacity: 0.8; }
+
+/* --- MODALS --- */
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(26, 43, 76, 0.6); z-index: 2000;
+    align-items: center; justify-content: center; backdrop-filter: blur(2px);
+    padding: 15px; /* Reduced from 20px for mobile */
+}
+
+/* COMPACT MODAL - Smaller on all screens */
+.modal-content {
+    background: white; 
+    padding: 16px; 
+    border-radius: 10px;
+    width: 100%; 
+    max-width: 340px; /* Even smaller - was 360px */
+    max-height: 90vh; /* Prevent overflow */
+    overflow-y: auto; /* Scroll if needed */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease;
+}
+
+/* Archive modal — wide enough for actions column */
+.modal-large {
+    max-width: 750px !important;
+    width: 95vw !important;
+    overflow: hidden !important;
+}
+.modal-large .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.modal-large table td:last-child,
+.modal-large table th:last-child {
+    min-width: 160px;
+    white-space: nowrap;
+}
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-header { 
+    display: flex; justify-content: space-between; 
+    align-items: center; margin-bottom: 12px; 
+}
+.modal-header h2 { font-size: 16px; font-weight: 700; }
+
+/* COMPACT FORM - 2 column grid, tighter spacing */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px; /* Reduced from 10px */
+    margin-bottom: 8px;
+}
+
+.form-group { margin-bottom: 0; }
+.form-group label { 
+    display: block; font-size: 10px; font-weight: 600; 
+    margin-bottom: 3px; color: var(--navy); 
+}
+
+input, select, textarea { 
+    width: 100%; padding: 7px 9px; /* Reduced from 8px 10px */
+    border: 1px solid #e1e4e8; 
+    border-radius: 6px; font-size: 12px; outline: none; 
+}
+input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+
+textarea { resize: vertical; }
+
+.modal-footer { 
+    display: flex; justify-content: flex-end; 
+    gap: 6px; margin-top: 12px; padding-top: 12px; 
+    border-top: 1px solid #eee;
+}
+.btn-cancel { 
+    background: #f1f3f5; color: var(--navy); 
+    padding: 8px 14px; border-radius: 6px; border: none; 
+    font-weight: 600; cursor: pointer; font-size: 12px;
+}
+
+/* Category Modal */
+.modal-body { padding: 8px 0; }
+.add-cat-row { display: flex; gap: 8px; margin-bottom: 15px; }
+.add-cat-row input { flex: 1; }
+.category-list { 
+    list-style: none; margin-top: 15px; 
+    border-top: 1px solid #eee; max-height: 300px; overflow-y: auto;
+}
+.category-list li { 
+    display: flex; justify-content: space-between; 
+    padding: 10px 5px; border-bottom: 1px solid #eee; 
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    header { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .header-actions { 
+        width: 100%; display: grid; 
+        grid-template-columns: 1fr 1fr; gap: 8px; 
+    }
+    #addItemBtn { grid-column: span 2; justify-content: center; }
+    .table-header-row { flex-direction: column; }
+    .search-box, .filter-select { width: 100%; }
+}
+
+@media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; gap: 6px; } /* Stack + tighter gap */
+    .modal-content { 
+        max-width: 92%; 
+        padding: 12px; 
+        max-height: 85vh; /* More vertical space */
+    }
+    .modal-header h2 { font-size: 15px; }
+    .modal-footer { flex-direction: column; gap: 6px; }
+    .modal-footer button { width: 100%; padding: 9px; }
+    input, select, textarea { font-size: 14px; } /* Slightly larger for mobile tap */
+}   
+/* ── ARCHIVE ACTION BUTTONS — side by side, never overlap ── */
+.archive-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.btn-restore-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-restore-sm:hover { background: #219150; }
+
+/* Make the delete icon button consistent size */
+.archive-actions .btn-icon.delete {
+    width: 32px;
+    height: 32px;
+    background: #ffebee;
+    color: #d32f2f;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: 0.2s;
+}
+.archive-actions .btn-icon.delete:hover { background: #ffcdd2; }
+
+/* Ensure archive modal is NEVER overridden by the compact mobile rules */
+@media (max-width: 600px) {
+    .modal-large {
+        max-width: 95vw !important;
+        width: 95vw !important;
+        padding: 16px !important;
+    }
+    /* Keep archive action buttons always on one row */
+    .archive-actions {
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+    .btn-restore-sm {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}

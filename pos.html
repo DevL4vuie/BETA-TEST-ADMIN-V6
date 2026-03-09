@@ -1,0 +1,289 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - POS System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/pos.css">
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="app-container">
+        <!-- Sidebar injects here -->
+        <div id="sidebar-placeholder"></div>
+
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>Point of Sale</h1>
+                    <p id="currentDate">Loading...</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="productSearch" placeholder="Search products...">
+                    </div>
+                </div>
+            </header>
+
+            <div class="pos-container">
+                <div class="product-section">
+                    <div class="category-tabs" id="categoryTabs">
+                        <button class="active" onclick="filterProducts('all', this)">All</button>
+                    </div>
+                    <div class="products-grid" id="productsGrid"></div>
+                </div>
+
+                <div class="cart-section">
+                    <div class="cart-header">
+                        <h3>Current Order</h3>
+                        <span class="order-id" id="orderNumber">#ORD-000000</span>
+                    </div>
+                    
+                    <div class="cart-items" id="cartItems">
+                        <div class="empty-cart-msg">
+                            <i class="fas fa-shopping-basket"></i>
+                            <p>No items added yet</p>
+                        </div>
+                    </div>
+
+                    <div class="cart-footer">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotalDisplay">₱0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>VAT</span>
+                            <span id="vatDisplay">₱0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Amount</span>
+                            <span id="totalDisplay">₱0.00</span>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn-cancel" onclick="window.clearCart()">Clear</button>
+                            <button class="btn-pay" onclick="window.openPaymentModal()">Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content small-modal">
+            <div class="modal-header">
+                <h3>Payment Details</h3>
+                <button class="close-modal" onclick="window.closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-summary">
+                    <span>Total Due:</span>
+                    <h2 id="modalTotalAmount">₱0.00</h2>
+                </div>
+
+                <div class="customer-fields-row">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customerName" class="form-input" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" id="customerPhone" class="form-input" placeholder="Enter number">
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <label style="display:block; font-size:12px; font-weight:600; color:var(--text-grey); margin-bottom:5px;">Payment Method</label>
+                    <div class="method-tabs">
+                        <button class="method-btn active" onclick="window.setPaymentMethod('Cash', this)">
+                            <i class="fas fa-money-bill-wave"></i> Cash
+                        </button>
+                        <button class="method-btn" onclick="window.setPaymentMethod('GCash', this)">
+                            <i class="fas fa-mobile-alt"></i> GCash
+                        </button>
+                        <button class="method-btn" onclick="window.setPaymentMethod('Bank', this)">
+                            <i class="fas fa-university"></i> Bank
+                        </button>
+                        <!-- NEW NFC BUTTON -->
+                        <button class="method-btn" onclick="window.setPaymentMethod('NFC', this)">
+                            <i class="fas fa-wifi"></i> NFC
+                        </button>
+                    </div>
+                </div>
+
+                <div id="cash-payment-section">
+                    <div class="form-group">
+                        <label>Cash Received</label>
+                        <input type="number" id="amountPaid" class="form-input large-input" placeholder="0.00">
+                    </div>
+                    <div class="quick-cash">
+                        <button onclick="setCash(100)">₱100</button>
+                        <button onclick="setCash(200)">₱200</button>
+                        <button onclick="setCash(500)">₱500</button>
+                        <button onclick="setCash(1000)">₱1000</button>
+                    </div>
+                    <div class="change-display">
+                        <span>Change:</span>
+                        <h3 id="changeAmount">₱0.00</h3>
+                    </div>
+                </div>
+
+                <div id="digital-payment-section" style="display: none; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Reference Number</label>
+                        <input type="text" id="referenceNumber" class="form-input" placeholder="Enter Ref No.">
+                    </div>
+                    <p style="font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
+                        Please verify the transfer amount matches the Total Due.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Add after #digital-payment-section -->
+<!-- Add NFC payment section after digital-payment-section -->
+<div id="nfc-payment-section" style="display: none; margin-top: 15px;">
+    <div style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; box-shadow: 0 8px 20px rgba(102,126,234,0.3);">
+        <div style="background: white; width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite;">
+            <i class="fas fa-wifi" style="font-size: 40px; color: #667eea;"></i>
+        </div>
+        <p style="font-weight: 700; color: white; font-size: 18px; margin-bottom: 8px;">Tap Card to Pay</p>
+        <p style="font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 20px;">₱<span id="nfcAmountDisplay">0.00</span></p>
+        <div class="nfc-status" id="nfcStatus">
+            <i class="fas fa-spinner fa-spin"></i> Waiting for ESP32-C3...
+        </div>
+    </div>
+</div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn-cancel" onclick="window.closePaymentModal()">Cancel</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-pay" style="background-color: #ff9800;" onclick="window.processDownpayment()">
+                        Downpayment
+                    </button>
+                    <button class="btn-pay" onclick="window.processPayment()">
+                        Complete Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal" id="receiptModal">
+        <div class="modal-content receipt-modal">
+            <div class="receipt-paper" id="receipt-print-area">
+                <div class="receipt-header">
+                    <h2>Gene's Lechon</h2>
+                    <p>Cagayan de Oro City</p>
+                    <p>Tel: (088) 123-4567</p>
+                </div>
+                <div class="receipt-info">
+                    <p>Date: <span id="rec-date"></span></p>
+                    <p>Order #: <span id="rec-orderId"></span></p>
+                    <p>Cashier: <span id="rec-cashier">Administrator</span></p>
+                    <div class="receipt-customer-section">
+                        <p>Customer: <span id="rec-customer"></span></p>
+                        <p>Contact: <span id="rec-contact"></span></p>
+                    </div>
+                </div>
+                <div class="receipt-body">
+                    <p>--------------------------------</p>
+                    <div class="receipt-items" id="rec-items"></div>
+                    <p>--------------------------------</p>
+                    <div class="receipt-totals">
+                        <div class="rec-row"><span>Subtotal:</span><span id="rec-subtotal">0.00</span></div>
+                        <div class="rec-row"><span>VAT:</span><span id="rec-vat">0.00</span></div>
+                        <div class="rec-row total"><span>TOTAL:</span><span id="rec-total">0.00</span></div>
+                        <br>
+                        <div class="rec-row"><span>Method:</span><span id="rec-method">Cash</span></div>
+                        <div class="rec-row" id="row-cash-paid"><span>Cash Paid:</span><span id="rec-cash">0.00</span></div>
+                        <div class="rec-row" id="row-change"><span>Change:</span><span id="rec-change">0.00</span></div>
+                        <div class="rec-row" id="row-balance" style="display:none; color:#d32f2f; font-weight:bold;">
+                            <span>Balance Due:</span><span id="rec-balance">0.00</span>
+                        </div>
+                        <div class="rec-row" id="row-ref" style="display:none;">
+                            <span>Ref #:</span><span id="rec-ref"></span>
+                        </div>
+                    </div>
+                    <div class="receipt-footer">
+                        <p>Thank you for your purchase!</p>
+                        <p>Please come again.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn-cancel" onclick="window.closeReceiptModal()">Close</button>
+                <button class="btn-pay" onclick="window.printReceipt()"><i class="fas fa-print"></i> Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clear Order Modal -->
+    <div class="modal" id="clearOrderModal">
+        <div class="modal-content small-modal" style="text-align: center; max-width: 350px;">
+            <div class="logout-icon-container" style="margin-bottom: 20px;">
+                <div style="background: #fee; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    <i class="fas fa-trash-alt" style="font-size: 28px; color: #f44336;"></i>
+                </div>
+            </div>
+            <h3 style="color: var(--navy); margin-bottom: 10px; font-size: 20px;">Clear Order?</h3>
+            <p style="color: var(--text-grey); font-size: 14px; margin-bottom: 30px;">
+                Are you sure you want to remove all items? This action cannot be undone.
+            </p>
+            <div class="modal-footer" style="justify-content: space-between; background: transparent; padding: 0;">
+                <button class="btn-cancel" onclick="window.closeClearModal()">Cancel</button>
+                <button class="btn-pay" style="background: #f44336; border:none; box-shadow: 0 4px 10px rgba(244,67,54,0.3);" onclick="window.confirmClearOrder()">Yes, Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Digital Downpayment Modal -->
+    <div class="modal" id="digitalDownpaymentModal" style="z-index: 2000;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Digital Downpayment</h3>
+                <span class="close-modal" onclick="window.closeDigitalDPModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-grey); margin-bottom: 15px;">
+                    Enter the partial amount received via <span id="lbl-digi-method" style="font-weight:bold; color:var(--primary);">GCash</span>.
+                </p>
+                <div class="form-group">
+                    <label>Amount Received</label>
+                    <input type="number" id="digi-dp-amount" class="form-control" placeholder="0.00">
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Reference Number</label>
+                    <input type="text" id="digi-dp-ref" class="form-control" placeholder="Txn ID / Ref #">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="window.closeDigitalDPModal()">Cancel</button>
+                <button class="btn-primary" onclick="window.confirmDigitalDP()">Confirm Downpayment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts: pos logic first, sidebar direct init, then auth last -->
+    <script type="module" src="js/pos.js"></script>
+    <script type="module">
+        import { initSidebar } from './js/sidebar.js';
+        initSidebar();
+    </script>
+    <script type="module" src="js/auth.js"></script>
+
+</body>
+</html>

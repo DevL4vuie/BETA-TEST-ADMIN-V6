@@ -1,0 +1,155 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - Admin Login</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body class="login-body">
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <h3>Authenticating...</h3>
+            <p>Please wait while we verify your credentials.</p>
+        </div>
+    </div>
+
+    <div class="login-wrapper">
+        
+        <div class="hero-section">
+            <ul class="circles">
+                <li></li><li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li><li></li>
+            </ul>
+
+            <div class="hero-overlay">
+                <p class="staff-tag">Store Manager</p>
+                <div class="hero-content">
+                    <h3>Admin Portal</h3>
+                    <p>Authentic Quality Since 2003</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="login-box-card">
+                
+                <div class="brand-header">
+                    <img src="logo.jpg" alt="Gene's Lechon" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=Genes+Lechon&background=ff4e00&color=fff&size=128'"> 
+                    
+                    <h1>Gene's Lechon</h1>
+                    <span class="highlight-box">Zone 4, Bulua, CDO</span>
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">Email Address</label>
+                        <i class="far fa-envelope input-icon"></i>
+                        <input type="text" id="username" required placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" required placeholder="Enter password">
+                        <i class="far fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">Remember me
+                            <input type="checkbox" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                        <a href="#" class="forgot-pass">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="loginBtn">
+                        <span>Login</span>
+                    </button>
+                    
+                    <p id="error-msg" class="error"></p>
+                </form>
+
+                <div class="social-login-section">
+                    <div class="separator">
+                        <span>Or continue with</span>
+                    </div>
+                    <div class="social-buttons">
+                        <!-- <button type="button" id="googleLoginBtn" class="btn-social btn-google">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <button type="button" id="facebookLoginBtn" class="btn-social btn-facebook">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button> -->
+                    </div>
+                </div>
+
+                <div class="login-footer">
+                    <p>Protected System</p>
+                    <small>Gene's Lechon Internal Use Only</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const loginForm = document.querySelector('#loginForm');
+        const loginBtn = document.querySelector('#loginBtn');
+        const loadingOverlay = document.querySelector('#loadingOverlay');
+        const errorMsg = document.querySelector('#error-msg');
+
+        // 1. Toggle Password Visibility
+        togglePassword.addEventListener('click', function (e) {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Toggle eye icon class
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 2. Handle Button State on Submit
+        loginForm.addEventListener('submit', function() {
+            // Change button text
+            loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authenticating...';
+            loginBtn.classList.add('btn-loading');
+            
+            // Show Loading Screen
+            loadingOverlay.classList.add('active');
+        });
+
+        // 3. Watch for Error Messages (UI Logic only)
+        // If auth.js inserts an error text, we hide the loader and reset button
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (errorMsg.style.display !== 'none' && errorMsg.innerText !== '') {
+                    // Error detected: Reset UI
+                    loadingOverlay.classList.remove('active');
+                    loginBtn.innerHTML = '<span>Login</span>';
+                    loginBtn.classList.remove('btn-loading');
+                }
+            });
+        });
+        
+        observer.observe(errorMsg, { attributes: true, childList: true, subtree: true });
+    </script>
+
+    <script type="module" src="js/auth.js"></script>
+ 
+
+</body>
+</html>

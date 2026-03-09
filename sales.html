@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - Sales Monitoring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/sales.css">
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="app-container">
+        
+        <aside id="sidebar-placeholder"></aside>
+
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>Sales Overview</h1>
+                    <p id="currentDate">Loading...</p>
+                </div>
+                <div class="header-right">
+                    <div class="quick-filters">
+                        <button class="q-btn active" id="btn-all">All</button>
+                        <button class="q-btn" id="btn-today">Today</button>
+                        <button class="q-btn" id="btn-week">This Week</button>
+                        <button class="q-btn" id="btn-month">This Month</button>
+                    </div>
+
+                    <div class="date-filter">
+                        <input type="date" id="customStartDate" class="date-input">
+                        <span style="color:#aaa;">to</span>
+                        <input type="date" id="customEndDate" class="date-input">
+                        
+                        <button class="btn-icon-action" id="applyFilterBtn" title="Apply Filter">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        
+                        <button class="btn-icon-action reset" id="resetFilterBtn" title="Reset Filters">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-print" id="printBtn"><i class="fas fa-print"></i></button>
+                        <button class="btn-export" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="sales-container">
+                
+<div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="stat-card">
+        <div class="stat-icon blue-bg"><i class="fas fa-shopping-cart"></i></div>
+        <div class="stat-info">
+            <span class="label">Total Orders</span>
+            <h3 id="stat-total-orders">0</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green-bg"><i class="fas fa-chart-pie"></i></div>
+        <div class="stat-info">
+            <span class="label">Avg. Order Value</span>
+            <h3 id="stat-avg-order">₱0.00</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple-bg"><i class="fas fa-trophy"></i></div>
+        <div class="stat-info">
+            <span class="label">Highest Sale</span>
+            <h3 id="stat-highest-sale">₱0.00</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon red-bg"><i class="fas fa-times-circle"></i></div>
+        <div class="stat-info">
+            <span class="label">Cancelled</span>
+            <h3 id="stat-cancelled">0</h3>
+        </div>
+    </div>
+</div>
+
+
+                <div class="charts-row">
+                    <div class="card chart-card main-chart">
+                        <div class="card-header">
+                            <h3>Sales Trend</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesTrendChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card chart-card side-chart">
+                        <div class="card-header">
+                            <h3>Top Selling Products</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="topSellingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h3>Transaction History</h3>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="tableSearch" placeholder="Search Order ID or Name...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Method</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer">
+                        <span class="showing-text" id="showingText">Showing 0 entries</span>
+                        <div class="pagination">
+                            <button class="page-btn" onclick="prevPage()"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageIndicator" style="font-size:13px; font-weight:600; padding:0 10px;">Page 1</span>
+                            <button class="page-btn" onclick="nextPage()"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initSidebar } from './js/sidebar.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initSidebar();
+        });
+    </script>
+
+    <script type="module" src="js/sales.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/guard.js"></script>
+
+</body>
+</html>

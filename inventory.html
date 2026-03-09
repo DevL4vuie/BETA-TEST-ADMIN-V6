@@ -1,0 +1,209 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/inventory.css">
+</head>
+<body>
+
+<aside id="sidebar-placeholder"></aside>
+
+<main class="main-content">
+
+    <header>
+        <div class="header-title">
+            <h1>Inventory Management</h1>
+            <p id="currentDate"></p>
+        </div>
+        <div class="header-actions">
+            <button id="manageCatsBtn" class="btn btn-light">
+                <i class="fas fa-tags"></i> Manage Categories
+            </button>
+            <button id="viewArchiveBtn" class="btn btn-light">
+                <i class="fas fa-box-archive"></i> View Archives
+            </button>
+            <button id="addItemBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Item
+            </button>
+        </div>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card" onclick="window.filterStatus('all')">
+            <div class="stat-icon blue"><i class="fas fa-box"></i></div>
+            <div class="stat-info">
+                <h3>Total Active</h3>
+                <p id="stat-total-items">0</p>
+            </div>
+        </div>
+        <div class="stat-card" onclick="window.filterStatus('low')">
+            <div class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-info">
+                <h3>Low Stock</h3>
+                <p id="stat-low-stock">0</p>
+            </div>
+        </div>
+        <div class="stat-card" onclick="window.filterStatus('expiring')">
+            <div class="stat-icon red"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h3>Expiring Soon</h3>
+                <p id="stat-expiring">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-coins"></i></div>
+            <div class="stat-info">
+                <h3>Total Value</h3>
+                <p id="stat-total-value">₱0.00</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header-row">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search active items...">
+            </div>
+            <select id="categoryFilter" class="filter-select">
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Unit Cost</th>
+                        <th>Total Value</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- Add/Edit Item Modal -->
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Item</h2>
+            <button onclick="window.closeModal()" class="btn-icon"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="itemForm" onsubmit="window.saveItem(event)">
+            <input type="hidden" id="itemId">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="itemName" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="itemCategory" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Current Stock</label>
+                    <input type="number" id="itemStock" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Min Stock Level</label>
+                    <input type="number" id="itemMinStock" value="5" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Unit Price (₱)</label>
+                    <input type="number" id="itemPrice" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Unit Type</label>
+                    <select id="itemUnit">
+                        <option value="Piece">Piece</option>
+                        <option value="Kg">Kg</option>
+                        <option value="Pack">Pack</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Tray">Tray</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="date" id="itemExpiry">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="itemDesc" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.closeModal()" class="btn-cancel">Cancel</button>
+                <button type="submit" class="btn-primary">Save Item</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div id="categoryModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Manage Categories</h2>
+            <button onclick="window.closeModal()" class="btn-icon"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="add-cat-row">
+                <input type="text" id="newCategoryInput" placeholder="New category name">
+                <button onclick="window.addCategory()" class="btn-primary">Add</button>
+            </div>
+            <ul id="categoryList" class="category-list"></ul>
+        </div>
+    </div>
+</div>
+
+<!-- Archive Modal -->
+<div id="archiveModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2>Archived Items</h2>
+            <button onclick="window.closeModal()" class="btn-icon"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Category</th>
+                            <th>Last Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="archiveTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script type="module">
+    import { initSidebar } from './js/sidebar.js';
+    document.addEventListener('DOMContentLoaded', () => { initSidebar(); });
+</script>
+<script type="module" src="js/inventory.js"></script>
+
+</body>
+</html>

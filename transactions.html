@@ -1,0 +1,187 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - Transaction History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/transactions.css">
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="app-container">
+        
+        <aside id="sidebar-placeholder"></aside>
+
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>Transactions</h1>
+                    <p id="currentDate">Loading...</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print Report</button>
+                </div>
+            </header>
+
+            <div class="transactions-container">
+                
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3>Transaction Volume</h3>
+                        <div class="chart-wrap">
+                            <canvas id="volumeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Payment Methods</h3>
+                        <div class="chart-wrap">
+                            <canvas id="methodChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <h3>Recent Transactions</h3>
+                    </div>
+
+                    <div class="table-filters" style="padding: 20px 0; border-bottom: 1px solid #eee; margin-bottom: 20px;">
+                        
+                        <div class="filter-row-top">
+                            <input type="text" id="searchInput" placeholder="Search Order ID or Customer...">
+                            
+                            <select id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="Paid">Paid / Completed</option>
+                                <option value="Partial">Partial</option>
+                                <option value="Void">Void</option>
+                            </select>
+                    
+                            <select id="methodFilter">
+                                <option value="all">All Payment Methods</option>
+                                <option value="Cash">Cash</option>
+                                <option value="GCash">GCash</option>
+                                <option value="NFC">NFC</option>
+                            </select>
+                        </div>
+                    
+                        <div class="filter-row-bottom" style="margin-top: 15px;">
+                            <span style="font-weight: 500; color: var(--text-grey); font-size: 14px;">Date:</span>
+                            
+                            <input type="date" id="startDate">
+                            <span style="color: var(--text-grey);">-</span>
+                            <input type="date" id="endDate">
+                            
+                            <div style="flex-grow: 1;"></div> 
+                    
+                            <button id="applyFilterBtn"><i class="fas fa-filter"></i> Apply</button>
+                            <button id="resetFilterBtn"><i class="fas fa-undo"></i> Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 12%;">Order ID</th>
+                                    <th style="width: 18%;">Date</th>
+                                    <th style="width: 18%;">Customer</th>
+                                    <th style="width: 12%;">Total</th>
+                                    <th style="width: 15%;">Status</th>
+                                    <th style="width: 12%;">Method</th>
+                                    <th style="width: 13%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <span class="showing-text" id="showingText">Showing 0 entries</span>
+                        <div class="pagination">
+                            <button class="page-btn" onclick="prevPage()"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageIndicator" style="font-size:13px; font-weight:600; padding:0 10px;">Page 1</span>
+                            <button class="page-btn" onclick="nextPage()"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Transaction Details</h3>
+                <button class="close-modal" onclick="closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                </div>
+            <div class="modal-footer">
+                </div>
+        </div>
+    </div>
+
+    <div class="modal" id="settleModal" style="z-index: 2000;">
+        <div class="modal-content small-modal" style="max-width: 350px;">
+            <div class="modal-header">
+                <h3>Settle Balance</h3>
+                <button class="close-modal" onclick="closeSettleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-grey); margin-bottom: 5px;">Remaining Balance:</p>
+                <h2 id="settleBalanceDisplay" style="color: #e74a3b; margin-bottom: 20px;">₱0.00</h2>
+                
+                <div class="form-group">
+                    <label>Enter Payment Amount</label>
+                    <input type="number" id="settleAmountInput" class="form-control" placeholder="0.00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeSettleModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmSettlement()" style="background: #1cc88a; color: white; border: none;">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmModal" style="z-index: 3000;">
+        <div class="modal-content small-modal" style="max-width: 400px; text-align: center;">
+            <div class="modal-body" style="padding: 30px 20px;">
+                <i class="fas fa-exclamation-circle" style="font-size: 50px; color: #f6c23e; margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 10px; color: var(--navy);">Are you sure?</h3>
+                <p id="confirmMessage" style="color: var(--text-grey);">Do you really want to proceed?</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 15px;">
+                <button class="btn-secondary" onclick="closeConfirmModal()">No, Cancel</button>
+                <button id="btnConfirmAction" class="btn-void" style="min-width: 120px;">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initSidebar } from './js/sidebar.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            initSidebar();
+        });
+    </script>
+
+    <script type="module" src="js/transactions.js"></script>
+    <script src="js/layout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gene's Lechon - Manage Customers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/Customers.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+<aside id="sidebar-placeholder"></aside>
+
+<main class="main-content">
+    <header>
+        <div class="header-title">
+            <h1>Manage Customers</h1>
+            <p id="currentDate">Loading...</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-archive-toggle" id="btnToggleArchive" onclick="window.toggleArchivedView()">
+                <i class="fas fa-archive"></i> View Archived
+            </button>
+            <button class="btn-export" onclick="window.exportCSV()">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+        </div>
+    </header>
+
+    <!-- Stats Row -->
+    <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Total Customers</span>
+                <h3 id="statTotal">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Active</span>
+                <h3 id="statActive">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-user-times"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Inactive</span>
+                <h3 id="statInactive">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">From CDO</span>
+                <h3 id="statCDO">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon grey"><i class="fas fa-archive"></i></div>
+            <div class="stat-info">
+                <span class="stat-label">Archived</span>
+                <h3 id="statArchived">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-toolbar">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search name, email, phone..." oninput="window.applyFilters()">
+            </div>
+            <div class="filter-wrap">
+                <select id="statusFilter" onchange="window.applyFilters()">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <select id="cityFilter" onchange="window.applyFilters()">
+                    <option value="all">All Cities</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Location</th>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Date Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <tr><td colspan="7" class="loading-row"><i class="fas fa-spinner fa-spin"></i> Loading customers...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <span id="showingText">Showing 0 entries</span>
+            <div class="pagination">
+                <button class="page-btn" onclick="window.prevPage()"><i class="fas fa-chevron-left"></i></button>
+                <span id="pageIndicator">Page 1</span>
+                <button class="page-btn" onclick="window.nextPage()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- View / Edit Customer Modal -->
+<div class="modal" id="customerModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Customer Profile</h3>
+            <button class="close-modal" onclick="window.closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+
+            <!-- Avatar + Name -->
+            <div class="profile-hero">
+                <div class="avatar-circle" id="modalAvatar">L</div>
+                <div>
+                    <h2 id="modalFullName">-</h2>
+                    <span class="role-badge">Customer</span>
+                    <span class="status-badge" id="modalStatusBadge">Active</span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <p id="modalUsername">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <p id="modalEmail">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-phone"></i> Phone</label>
+                    <p id="modalPhone">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-city"></i> City</label>
+                    <p id="modalCity">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-map"></i> Province</label>
+                    <p id="modalProvince">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-road"></i> Street</label>
+                    <p id="modalStreet">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-home"></i> Barangay</label>
+                    <p id="modalBarangay">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-calendar-plus"></i> Date Joined</label>
+                    <p id="modalCreatedAt">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-calendar-check"></i> Last Updated</label>
+                    <p id="modalUpdatedAt">-</p>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-fingerprint"></i> UID</label>
+                    <p id="modalUid" style="font-size:11px; word-break:break-all;">-</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-close" onclick="window.closeModal()">Close</button>
+            <div class="footer-right">
+                <button class="btn-reset-pass" onclick="window.sendPasswordReset()">
+                    <i class="fas fa-key"></i> Reset Password
+                </button>
+                <button class="btn-restore" id="btnRestore" style="display:none;" onclick="window.restoreCustomer(selectedCustomer?.id)">
+                    <i class="fas fa-undo-alt"></i> Restore
+                </button>
+                <button class="btn-toggle-status" id="btnToggleStatus" onclick="window.toggleStatus()">
+                    <i class="fas fa-ban"></i> Deactivate
+                </button>
+                <button class="btn-archive" id="btnArchive" onclick="window.archiveCustomer(selectedCustomer?.id, selectedCustomer?.isActive !== false)">
+                    <i class="fas fa-archive"></i> Archive
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal" id="confirmModal">
+    <div class="modal-content confirm-modal">
+        <div class="modal-body" style="text-align:center; padding: 30px 20px;">
+            <div class="confirm-icon" id="confirmIcon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 id="confirmTitle">Are you sure?</h3>
+            <p id="confirmMessage">Do you want to proceed?</p>
+        </div>
+        <div class="modal-footer" style="justify-content:center; gap:15px;">
+            <button class="btn-close" onclick="window.closeConfirm()">Cancel</button>
+            <button class="btn-confirm-action" id="btnConfirmAction">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initSidebar } from './js/sidebar.js';
+    document.addEventListener('DOMContentLoaded', () => initSidebar());
+</script>
+<script type="module" src="js/Customers.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/guard.js"></script>
+</body>
+</html>

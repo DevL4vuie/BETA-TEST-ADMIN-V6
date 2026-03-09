@@ -1,0 +1,247 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | Gene's Lechon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/users.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+<aside id="sidebar-placeholder"></aside>
+
+<main class="main-content">
+    <header>
+        <div class="header-left">
+            <h1>Manage Users</h1>
+            <p id="currentDate">Loading...</p>
+        </div>
+        <div class="header-right">
+            <button class="btn-primary" onclick="window.openUserModal()">
+                <i class="fas fa-plus"></i> Add User
+            </button>
+        </div>
+    </header>
+
+    <!-- Stats Row -->
+    <div class="user-stats">
+        <div class="ustat-card">
+            <div class="ustat-icon blue"><i class="fas fa-users"></i></div>
+            <div class="ustat-info">
+                <span class="ustat-num" id="statTotal">0</span>
+                <span class="ustat-lbl">Total Users</span>
+            </div>
+        </div>
+        <div class="ustat-card">
+            <div class="ustat-icon green"><i class="fas fa-user-check"></i></div>
+            <div class="ustat-info">
+                <span class="ustat-num" id="statActive">0</span>
+                <span class="ustat-lbl">Active</span>
+            </div>
+        </div>
+        <div class="ustat-card">
+            <div class="ustat-icon red"><i class="fas fa-user-slash"></i></div>
+            <div class="ustat-info">
+                <span class="ustat-num" id="statDisabled">0</span>
+                <span class="ustat-lbl">Disabled</span>
+            </div>
+        </div>
+        <div class="ustat-card">
+            <div class="ustat-icon grey"><i class="fas fa-archive"></i></div>
+            <div class="ustat-info">
+                <span class="ustat-num" id="statArchived">0</span>
+                <span class="ustat-lbl">Archived</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="users-container">
+        <div class="table-card">
+            <!-- Tab bar + Search -->
+            <div class="table-toolbar">
+                <div class="view-tabs">
+                    <button class="vtab active" id="tabActive" onclick="switchUserView('active', this)">
+                        <i class="fas fa-users"></i> Active Users
+                    </button>
+                    <button class="vtab" id="tabArchive" onclick="switchUserView('archive', this)">
+                        <i class="fas fa-archive"></i> Archived
+                        <span class="archive-pill" id="archivePill" style="display:none;"></span>
+                    </button>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="userSearch" placeholder="Search by name or email...">
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th id="actionsHeader">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="5" class="loading-cell">
+                            <div class="loading-spinner"></div> Loading users...
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty state -->
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <div class="empty-icon"><i class="fas fa-users-slash"></i></div>
+                <h3 id="emptyTitle">No users found</h3>
+                <p id="emptyMsg">Add a new user to get started.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ═══ ADD / EDIT MODAL ═══ -->
+<div class="modal" id="userModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title-group">
+                <span class="modal-icon-badge"><i class="fas fa-user-cog"></i></span>
+                <h3 id="modalTitle">Add New User</h3>
+            </div>
+            <button class="close-modal" onclick="window.closeAllModals()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <form id="userForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-row two-col">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Full Name</label>
+                        <input type="text" id="fullName" required placeholder="Juan Dela Cruz">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-shield-alt"></i> Role</label>
+                        <select id="role">
+                            <option value="cashier">Cashier</option>
+                            <option value="clerk">Clerk</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" required placeholder="juan@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label id="passLabel"><i class="fas fa-lock"></i> Password <small>(Min. 6 characters)</small></label>
+                    <div class="password-input-wrapper">
+                        <input type="text" id="password" placeholder="••••••" minlength="6">
+                        <button type="button" class="generate-btn" onclick="window.generatePassword()" title="Generate Password">
+                            <i class="fas fa-random"></i>
+                        </button>
+                    </div>
+                    <small id="passHelpText" style="display:none;" class="help-text">Leave blank to keep current password.</small>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-toggle-on"></i> Account Status</label>
+                    <select id="status">
+                        <option value="active">Active</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                    <small id="selfDisableWarning" style="display:none;" class="warning-text">
+                        <i class="fas fa-lock"></i> You cannot disable your own account.
+                    </small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="window.closeAllModals()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveUserBtn">
+                        <i class="fas fa-save"></i> Save User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ ARCHIVE CONFIRM MODAL ═══ -->
+<div class="modal" id="archiveModal">
+    <div class="modal-content small-modal text-center">
+        <div class="modal-body" style="padding:30px 25px;">
+            <div class="icon-circle archive-icon">
+                <i class="fas fa-user-clock"></i>
+            </div>
+            <h3>Archive this user?</h3>
+            <p class="confirm-msg">They won't be able to log in but their data is preserved. You can restore them anytime.</p>
+            <input type="hidden" id="archiveUserId">
+            <div class="action-buttons-center">
+                <button class="btn-outline" onclick="window.closeAllModals()">Cancel</button>
+                <button class="btn-archive-confirm" id="confirmArchiveBtn" onclick="window.confirmArchive()">
+                    <i class="fas fa-archive"></i> Archive
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ RESTORE CONFIRM MODAL ═══ -->
+<div class="modal" id="restoreModal">
+    <div class="modal-content small-modal text-center">
+        <div class="modal-body" style="padding:30px 25px;">
+            <div class="icon-circle restore-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <h3>Restore this user?</h3>
+            <p class="confirm-msg">This user will be moved back to the active list and can log in again.</p>
+            <input type="hidden" id="restoreUserId">
+            <div class="action-buttons-center">
+                <button class="btn-outline" onclick="window.closeAllModals()">Cancel</button>
+                <button class="btn-restore-confirm" id="confirmRestoreBtn" onclick="window.confirmRestore()">
+                    <i class="fas fa-undo"></i> Restore
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ PERMANENT DELETE MODAL ═══ -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content small-modal text-center">
+        <div class="modal-body" style="padding:30px 25px;">
+            <div class="icon-circle delete-icon">
+                <i class="fas fa-user-times"></i>
+            </div>
+            <h3>Delete Permanently?</h3>
+            <p class="confirm-msg" style="color:#f44336;">
+                This will <strong>permanently remove</strong> the user from the database. This action <strong>cannot be undone</strong>.
+            </p>
+            <input type="hidden" id="deleteUserId">
+            <div class="action-buttons-center">
+                <button class="btn-outline" onclick="window.closeAllModals()">Cancel</button>
+                <button class="btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> Delete Forever
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initSidebar } from './js/sidebar.js';
+    document.addEventListener('DOMContentLoaded', () => { initSidebar(); });
+</script>
+<script type="module" src="js/users.js"></script>
+<script type="module" src="js/auth.js"></script>
+
+</body>
+</html>
