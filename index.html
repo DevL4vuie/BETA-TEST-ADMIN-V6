@@ -4,13 +4,13 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gene's Lechon - Admin Login</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/login.css">
@@ -27,13 +27,11 @@
     </div>
 
     <div class="login-wrapper">
-        
         <div class="hero-section">
             <ul class="circles">
                 <li></li><li></li><li></li><li></li><li></li>
                 <li></li><li></li><li></li><li></li><li></li>
             </ul>
-
             <div class="hero-overlay">
                 <p class="staff-tag">Store Manager</p>
                 <div class="hero-content">
@@ -44,11 +42,14 @@
         </div>
 
         <div class="form-section">
+            <ul class="circles-right">
+                <li></li><li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li><li></li>
+            </ul>
+
             <div class="login-box-card">
-                
                 <div class="brand-header">
-                    <img src="logo.jpg" alt="Gene's Lechon" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=Genes+Lechon&background=ff4e00&color=fff&size=128'"> 
-                    
+                    <img src="logo.jpg" alt="Gene's Lechon" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=Genes+Lechon&background=ff4e00&color=fff&size=128'">
                     <h1>Gene's Lechon</h1>
                     <span class="highlight-box">Zone 4, Bulua, CDO</span>
                 </div>
@@ -59,98 +60,139 @@
                         <i class="far fa-envelope input-icon"></i>
                         <input type="text" id="username" required placeholder="Enter your email">
                     </div>
-                    
                     <div class="input-group">
                         <label for="password">Password</label>
                         <i class="fas fa-lock input-icon"></i>
                         <input type="password" id="password" required placeholder="Enter password">
                         <i class="far fa-eye-slash toggle-password" id="togglePassword"></i>
                     </div>
-
                     <div class="form-options">
                         <label class="checkbox-container">Remember me
                             <input type="checkbox" checked="checked">
                             <span class="checkmark"></span>
                         </label>
-                        <a href="#" class="forgot-pass">Forgot Password?</a>
+                        <a href="#" class="forgot-pass" id="forgotPassBtn">Forgot Password?</a>
                     </div>
-
                     <button type="submit" class="btn-login" id="loginBtn">
                         <span>Login</span>
                     </button>
-                    
                     <p id="error-msg" class="error"></p>
                 </form>
-
-                <div class="social-login-section">
-                    <div class="separator">
-                        
-                    </div>
-                    <div class="social-buttons">
-                        <!-- <button type="button" id="googleLoginBtn" class="btn-social btn-google">
-                            <i class="fab fa-google"></i> Google
-                        </button>
-                        <button type="button" id="facebookLoginBtn" class="btn-social btn-facebook">
-                            <i class="fab fa-facebook-f"></i> Facebook
-                        </button> -->
-                    </div>
-                </div>
 
                 <div class="login-footer">
                     <p>Protected System</p>
                     <small>Gene's Lechon Internal Use Only</small>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="forgot-modal-overlay">
+        <div class="forgot-modal">
+            <button class="forgot-modal-close" id="closeForgotModal"><i class="fas fa-times"></i></button>
+            <div class="forgot-modal-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <h2>Reset Password</h2>
+            <p>Enter your admin email and we'll send you a reset link.</p>
+
+            <div id="resetFormSection">
+                <div class="input-group" style="text-align:left; margin-bottom:10px;">
+                    <label for="resetEmail">Email Address</label>
+                    <i class="far fa-envelope input-icon"></i>
+                    <input type="email" id="resetEmail" placeholder="Enter your email"
+                        style="padding:12px 15px 12px 45px; width:100%; border:1px solid #eee; border-radius:10px; font-size:0.9rem; background:#f9f9f9; outline:none; font-family:'Poppins',sans-serif; color:#1a2b4c;">
+                </div>
+                <p id="resetMsg" style="font-size:13px; margin-bottom:10px; min-height:18px;"></p>
+                <button class="btn-got-it" id="sendResetBtn">
+                    <i class="fas fa-paper-plane"></i> Send Reset Link
+                </button>
+            </div>
+
+            <div id="resetSuccessSection" style="display:none;">
+                <div style="font-size: 50px; color: #1cc88a; margin-bottom: 15px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 style="color:#1a2b4c; margin-bottom:8px;">Link Sent!</h3>
+                <p style="color:#8d97ad; font-size:14px; margin-bottom:20px;">Check your inbox for the password reset link.</p>
+                <button class="btn-got-it" id="closeSuccessBtn">Got it</button>
             </div>
         </div>
     </div>
 
     <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        const loginForm = document.querySelector('#loginForm');
-        const loginBtn = document.querySelector('#loginBtn');
-        const loadingOverlay = document.querySelector('#loadingOverlay');
-        const errorMsg = document.querySelector('#error-msg');
-
-        // 1. Toggle Password Visibility
-        togglePassword.addEventListener('click', function (e) {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            // Toggle eye icon class
+        // Toggle password
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwd.setAttribute('type', type);
             this.classList.toggle('fa-eye');
             this.classList.toggle('fa-eye-slash');
         });
 
-        // 2. Handle Button State on Submit
+        // Login loading state
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const errorMsg = document.getElementById('error-msg');
+
         loginForm.addEventListener('submit', function() {
-            // Change button text
             loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authenticating...';
             loginBtn.classList.add('btn-loading');
-            
-            // Show Loading Screen
             loadingOverlay.classList.add('active');
         });
 
-        // 3. Watch for Error Messages (UI Logic only)
-        // If auth.js inserts an error text, we hide the loader and reset button
         const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+            mutations.forEach(function() {
                 if (errorMsg.style.display !== 'none' && errorMsg.innerText !== '') {
-                    // Error detected: Reset UI
                     loadingOverlay.classList.remove('active');
                     loginBtn.innerHTML = '<span>Login</span>';
                     loginBtn.classList.remove('btn-loading');
                 }
             });
         });
-        
         observer.observe(errorMsg, { attributes: true, childList: true, subtree: true });
+
+        // Forgot Password Modal
+        const forgotModal = document.getElementById('forgotModal');
+
+        document.getElementById('forgotPassBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('resetMsg').textContent = '';
+            document.getElementById('resetFormSection').style.display = 'block';
+            document.getElementById('resetSuccessSection').style.display = 'none';
+            forgotModal.classList.add('active');
+        });
+
+        document.getElementById('closeForgotModal').addEventListener('click', () => forgotModal.classList.remove('active'));
+        forgotModal.addEventListener('click', (e) => { if (e.target === forgotModal) forgotModal.classList.remove('active'); });
+
+        document.getElementById('sendResetBtn').addEventListener('click', function() {
+            const email = document.getElementById('resetEmail').value.trim();
+            const resetMsg = document.getElementById('resetMsg');
+
+            if (!email) {
+                resetMsg.textContent = 'Please enter your email address.';
+                resetMsg.style.color = '#f44336';
+                return;
+            }
+            if (!email.includes('@')) {
+                resetMsg.textContent = 'Please enter a valid email address.';
+                resetMsg.style.color = '#f44336';
+                return;
+            }
+
+            // Show success UI
+            document.getElementById('resetFormSection').style.display = 'none';
+            document.getElementById('resetSuccessSection').style.display = 'block';
+        });
+
+        document.getElementById('closeSuccessBtn').addEventListener('click', () => forgotModal.classList.remove('active'));
     </script>
 
     <script type="module" src="js/auth.js"></script>
- 
 
 </body>
-
-</html>
+</html>s
