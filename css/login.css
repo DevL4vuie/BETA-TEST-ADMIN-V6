@@ -1,8 +1,3 @@
-
-
-
-
-
 /* --- LOGO STYLING --- */
 .brand-logo {
     width: 80px; 
@@ -40,72 +35,34 @@ body.login-body {
 
 /* --- LOADING OVERLAY --- */
 .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.95); z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
     backdrop-filter: blur(5px);
 }
-
-.loading-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.loader-content {
-    text-align: center;
-    color: var(--accent-navy);
-}
-
+.loading-overlay.active { opacity: 1; visibility: visible; }
+.loader-content { text-align: center; color: var(--accent-navy); }
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary-orange);
-    border-radius: 50%;
-    margin: 0 auto 20px;
+    width: 50px; height: 50px;
+    border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-orange);
+    border-radius: 50%; margin: 0 auto 20px;
     animation: spin 1s linear infinite;
 }
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* --- MAIN CARD --- */
 .login-wrapper {
-    display: flex;
-    width: 100%;
-    max-width: 1000px;
-    min-height: 600px; 
-    background: var(--bg-white);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--shadow-main);
-    position: relative;
+    display: flex; width: 100%; max-width: 1000px; min-height: 600px;
+    background: var(--bg-white); border-radius: 20px;
+    overflow: hidden; box-shadow: var(--shadow-main); position: relative;
 }
 
-/* --- LEFT SIDE (ANIMATION) --- */
+/* --- LEFT SIDE --- */
 .hero-section {
-    flex: 1;
-    position: relative;
-    background: var(--primary-orange); 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; 
-    padding: 40px;
-    color: white;
+    flex: 1; position: relative; background: var(--primary-orange);
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; overflow: hidden; padding: 40px; color: white;
 }
 
 .circles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; margin: 0; padding: 0; z-index: 1; }
@@ -126,16 +83,39 @@ body.login-body {
 
 .hero-overlay { position: relative; z-index: 2; text-align: center; }
 .staff-tag {
-    background: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px; 
-    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; display: inline-block; 
+    background: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 20px;
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; display: inline-block;
     margin-bottom: 20px; backdrop-filter: blur(5px);
 }
 .hero-content h3 { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
 .hero-content p { font-size: 1rem; opacity: 0.9; font-weight: 300; }
 
-/* --- RIGHT SIDE (FORM) --- */
-.form-section { flex: 1.2; background: #fff; padding: 40px; display: flex; justify-content: center; align-items: center; }
-.login-box-card { width: 100%; max-width: 380px; text-align: center; }
+/* --- RIGHT SIDE --- */
+.form-section {
+    flex: 1.2; background: #fff; padding: 40px;
+    display: flex; justify-content: center; align-items: center;
+    position: relative; overflow: hidden;
+}
+
+/* RIGHT SIDE FLOATING CIRCLES */
+.circles-right { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; margin: 0; padding: 0; z-index: 0; }
+.circles-right li {
+    position: absolute; display: block; list-style: none; width: 20px; height: 20px;
+    background: rgba(255, 78, 0, 0.15);
+    animation: animate 25s linear infinite; bottom: -150px;
+}
+.circles-right li:nth-child(1)  { left: 15%; width: 80px;  height: 80px;  animation-delay: 0s;   animation-duration: 20s; }
+.circles-right li:nth-child(2)  { left: 75%; width: 20px;  height: 20px;  animation-delay: 2s;   animation-duration: 12s; }
+.circles-right li:nth-child(3)  { left: 50%; width: 25px;  height: 25px;  animation-delay: 4s;   animation-duration: 16s; }
+.circles-right li:nth-child(4)  { left: 30%; width: 60px;  height: 60px;  animation-delay: 1s;   animation-duration: 18s; }
+.circles-right li:nth-child(5)  { left: 60%; width: 15px;  height: 15px;  animation-delay: 6s;   animation-duration: 14s; }
+.circles-right li:nth-child(6)  { left: 85%; width: 45px;  height: 45px;  animation-delay: 3s;   animation-duration: 22s; }
+.circles-right li:nth-child(7)  { left: 5%;  width: 30px;  height: 30px;  animation-delay: 7s;   animation-duration: 17s; }
+.circles-right li:nth-child(8)  { left: 40%; width: 55px;  height: 55px;  animation-delay: 0.5s; animation-duration: 25s; }
+.circles-right li:nth-child(9)  { left: 20%; width: 18px;  height: 18px;  animation-delay: 9s;   animation-duration: 13s; }
+.circles-right li:nth-child(10) { left: 90%; width: 35px;  height: 35px;  animation-delay: 5s;   animation-duration: 19s; }
+
+.login-box-card { width: 100%; max-width: 380px; text-align: center; position: relative; z-index: 1; }
 
 .brand-header { margin-bottom: 25px; }
 .brand-header h1 {
@@ -150,31 +130,22 @@ body.login-body {
 .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--accent-navy); margin-bottom: 8px; display: block; }
 .input-icon { position: absolute; left: 15px; top: 42px; color: #999; font-size: 1rem; z-index: 2; }
 .input-group input {
-    width: 100%; padding: 12px 40px 12px 45px; /* Added right padding for eye icon */
+    width: 100%; padding: 12px 40px 12px 45px;
     border: 1px solid #eee; border-radius: 10px;
     font-size: 0.9rem; transition: 0.3s; background: #f9f9f9; outline: none; color: var(--accent-navy);
 }
 .input-group input:focus { border-color: var(--primary-orange); background: #fff; box-shadow: 0 0 0 3px rgba(255, 78, 0, 0.1); }
 
-/* PASSWORD TOGGLE ICON */
 .toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 42px;
-    color: #999;
-    cursor: pointer;
-    font-size: 1rem;
-    z-index: 3;
-    transition: color 0.3s;
+    position: absolute; right: 15px; top: 42px;
+    color: #999; cursor: pointer; font-size: 1rem; z-index: 3; transition: color 0.3s;
 }
 .toggle-password:hover { color: var(--primary-orange); }
 
-/* OPTIONS */
 .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 0.85rem; }
 .forgot-pass { color: var(--primary-orange); text-decoration: none; font-weight: 600; }
 .forgot-pass:hover { text-decoration: underline; }
 
-/* CHECKBOX */
 .checkbox-container { display: block; position: relative; padding-left: 25px; cursor: pointer; user-select: none; color: var(--text-grey); }
 .checkbox-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
 .checkmark { position: absolute; top: 0; left: 0; height: 18px; width: 18px; background-color: #eee; border-radius: 4px; }
@@ -184,7 +155,6 @@ body.login-body {
 .checkbox-container input:checked ~ .checkmark:after { display: block; }
 .checkbox-container .checkmark:after { left: 6px; top: 2px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-/* BUTTON STYLING */
 .btn-login {
     width: 100%; padding: 14px; background: var(--accent-navy);
     color: #fff; border: none; border-radius: 10px;
@@ -193,40 +163,75 @@ body.login-body {
     display: flex; justify-content: center; align-items: center; gap: 10px;
 }
 .btn-login:hover { background: #12203a; transform: translateY(-3px); }
-.btn-login.btn-loading {
-    background: #0d1626;
-    opacity: 0.9;
-    transform: none;
-    cursor: wait;
-}
+.btn-login.btn-loading { background: #0d1626; opacity: 0.9; transform: none; cursor: wait; }
 
 .error { color: #f44336; margin-top: 10px; font-size: 13px; font-weight: 500; display: none; }
 
-/* SOCIAL */
 .social-login-section { margin-top: 20px; }
 .separator { display: flex; align-items: center; margin: 15px 0; color: #999; font-size: 0.85rem; }
 .separator::before, .separator::after { content: ""; flex: 1; height: 1px; background: #eee; }
 .separator::before { margin-right: 15px; }
 .separator::after { margin-left: 15px; }
 .social-buttons { display: flex; gap: 15px; justify-content: center; }
-.btn-social {
-    flex: 1; padding: 12px; border-radius: 50px; border: none;
-    font-size: 0.9rem; font-weight: 600; cursor: pointer;
-    transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.05);
-}
+.btn-social { flex: 1; padding: 12px; border-radius: 50px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
 .btn-google { background-color: #fff; border: 2px solid #eee; color: #333; }
 .btn-google:hover { border-color: #ccc; background-color: #f9f9f9; transform: translateY(-2px); }
 .btn-facebook { background-color: #1877f2; color: #fff; border: none; }
-.btn-facebook:hover { background-color: #166fe5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(24, 119, 242, 0.2); }
+.btn-facebook:hover { background-color: #166fe5; transform: translateY(-2px); }
 
 .login-footer { margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 20px; font-size: 0.8rem; color: #999; }
 .login-footer p { font-weight: 600; color: var(--accent-navy); margin-bottom: 2px; }
 
-/* RESPONSIVE */
 @media (max-width: 850px) {
     .login-wrapper { flex-direction: column; width: 90%; height: auto; }
     .hero-section { padding: 40px 20px; flex: 0.6; }
     .circles li { bottom: -50px; }
     .form-section { padding: 40px 20px; }
 }
+
+/* --- FORGOT PASSWORD MODAL --- */
+.forgot-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 10000;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    backdrop-filter: blur(4px); padding: 20px;
+}
+.forgot-modal-overlay.active { opacity: 1; visibility: visible; }
+
+.forgot-modal {
+    background: #fff; border-radius: 20px; padding: 40px 35px;
+    max-width: 400px; width: 100%; text-align: center; position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    transform: translateY(20px) scale(0.97); transition: all 0.3s ease;
+}
+.forgot-modal-overlay.active .forgot-modal { transform: translateY(0) scale(1); }
+
+.forgot-modal-close {
+    position: absolute; top: 15px; right: 15px;
+    background: #f5f5f5; border: none; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer; color: #999; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.forgot-modal-close:hover { background: #ffe0d4; color: var(--primary-orange); }
+
+.forgot-modal-icon {
+    width: 70px; height: 70px;
+    background: linear-gradient(135deg, var(--primary-orange), var(--primary-yellow));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; box-shadow: 0 10px 25px rgba(255,78,0,0.3);
+}
+.forgot-modal-icon i { font-size: 1.8rem; color: white; }
+.forgot-modal h2 { font-size: 1.5rem; font-weight: 700; color: var(--accent-navy); margin-bottom: 10px; }
+.forgot-modal > p { color: var(--text-grey); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+
+.btn-got-it {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--primary-orange), #ff7b00);
+    color: white; border: none; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 8px 20px rgba(255,78,0,0.25);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-got-it:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(255,78,0,0.35); }
+.btn-got-it:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
